@@ -245,13 +245,22 @@
 					<nav class="list-nav">
 						<ul>
 							{#each $lessons as lesson}
+								{@const savedSnapshot = $snapshots.find(
+									(snapshot) => snapshot.lesson_slug === lesson.slug,
+								)}
 								<li class="flex items-center">
 									<a href={`/tutorial/${lesson.slug}`}>
 										<span class="badge"><FontAwesomeIcon icon={faArrowRight} /></span>
 										<span class="flex items-center gap-4">{lesson.title} </span>
 									</a>
+									<!-- Status badge based on whether a snapshot exists -->
+									{#if savedSnapshot}
+										<span class="badge variant-filled-success text-xs">Saved</span>
+									{:else}
+										<span class="badge variant-ghost text-xs opacity-60">Not started</span>
+									{/if}
 									<!-- Check if there is a user snapshot saved for the current lesson -->
-									{#if $snapshots.find((snapshot) => snapshot.lesson_slug === lesson.slug)}
+									{#if savedSnapshot}
 										<ConfirmButton
 											initiateText="Snapshot"
 											initiateClass="btn btn-sm flex items-center gap-2"
@@ -261,10 +270,6 @@
 										></ConfirmButton>
 									{/if}
 								</li>
-								<!-- If it's not the last iteration, ad an HR -->
-								{#if lesson !== $lessons[$lessons.length - 1]}
-									<hr class="opacity-50" />
-								{/if}
 							{/each}
 						</ul>
 					</nav>
