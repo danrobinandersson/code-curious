@@ -95,7 +95,21 @@
 			lessonData.playfiled = {};
 		}
 	};
+
 	fetchLesson();
+
+	let allLessons: { title: string; slug: string }[] = [];
+	let dropdownOpen = false;
+
+	const fetchAllLessons = async () => {
+		const { data, error } = await supabase.from('lessons').select('title, slug');
+		if (error) {
+			console.error('Error fetching lessons list:', error);
+			return;
+		}
+		allLessons = data ?? [];
+	};
+	fetchAllLessons();
 
 	// Reactive declaration to update when the route changes
 	$: if ($page.params.lessonId !== lessonId) {
@@ -259,8 +273,38 @@
 		<div
 			class="w-full flex items-center justify-between space-x-4 py-3 px-4 bg-[#3a1d2a] sticky top-0 z-10"
 		>
-			<h2 class="flex items-center py-0 gap-4">
+			<h2 class="flex items-center py-0 gap-4 relative">
 				<FontAwesomeIcon icon={faChalkboardUser} /> Lesson
+				<button
+					type="button"
+					class="btn btn-sm py-0"
+					on:click={() => (dropdownOpen = !dropdownOpen)}
+				>
+					<span
+						class="inline-block transform transition-transform duration-200 {dropdownOpen
+							? 'rotate-90'
+							: ''}"
+					>
+						<FontAwesomeIcon icon={faAngleRight} />
+					</span>
+				</button>
+				{#if dropdownOpen}
+					<ul
+						class="absolute top-full left-0 bg-[#3a1d2a] rounded-md shadow-lg z-20 mt-1 w-64 max-h-64 overflow-y-auto"
+					>
+						{#each allLessons as lesson}
+							<li>
+								<a
+									href={`/tutorial/${lesson.slug}`}
+									class="block px-4 py-2 hover:bg-[#4a2536]"
+									on:click={() => (dropdownOpen = false)}
+								>
+									{lesson.title}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				{/if}
 			</h2>
 			<!-- Toggle Panel 1 width -->
 			<button
