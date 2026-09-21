@@ -3,6 +3,8 @@
 	import Parser from './Parser.svelte';
 	import { fetchLessonTitle } from '$lib/utils/fetchLessonTitle';
 	import { fade } from 'svelte/transition';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 	// Expose the data prop to receive the data from the parent +page.svelte
 	export let data;
@@ -65,20 +67,22 @@
 		{/each}
 	</div>
 	<div>
-		{#if titlesLoaded}
-			<div in:fade={{ duration: 250 }} class="my-8">
-				{#if data.nextLesson === 'lesson-1'}
-					<p>
-						<a class="anchor" href={`/tutorial/${data.nextLesson}`}
-							>Start the first lesson &gt;&gt;</a
-						>
-					</p>
-				{:else if data.nextLesson}
-					<p>
-						<a class="anchor" href={`/tutorial/${data.nextLesson}`}>{nextTitle} &gt;&gt;</a>
-					</p>
-				{/if}
-			</div>
+		{#if data.nextLesson === 'lesson-1'}
+			<a
+				class="btn bg-primary-700 flex gap-2 items-center w-fit"
+				href={`/tutorial/${data.nextLesson}`}
+			>
+				Start the first lesson
+				<FontAwesomeIcon icon={faArrowRight} />
+			</a>
+		{:else if data.nextLesson}
+			<a
+				class="btn bg-primary-700 flex gap-2 items-center w-fit"
+				href={`/tutorial/${data.nextLesson}`}
+			>
+				{nextTitle}
+				<FontAwesomeIcon icon={faArrowRight} />
+			</a>
 		{/if}
 	</div>
 </div>
