@@ -7,3 +7,8 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+
+declare module '*.postcss'{
+	const content: string;
+	export default content;
+}
